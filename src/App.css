@@ -1,0 +1,64 @@
+@import '~antd/dist/antd.css';
+
+.trigger {
+  font-size: 18px;
+  line-height: 64px;
+  padding: 0 24px;
+  cursor: pointer;
+  transition: color 0.3s;
+  margin-left: 12px;
+}
+
+.trigger:hover {
+  color: #1890ff;
+}
+
+.logo {
+  height: 32px;
+  background: rgba(255, 255, 255, 0.2);
+  margin: 16px;
+}
+
+.site-layout-background {
+  background: #fff;
+}
+
+.wrapper{
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(241, 241, 241);
+}
+
+.ant-layout{
+  height: auto;
+}
+
+.fl-right{
+display: flex;
+justify-content: space-between;
+align-items: center;
+}
+
+.cus-btn{
+  margin-right: 20px;
+}
+
+.flex{
+  display:flex;
+  justify-content: space-around;
+}
+
+.flex-between{
+  display:flex;
+  justify-content: space-between;
+}
+
+.table-operations {
+  margin-bottom: 16px;
+}
+
+.table-operations > button {
+  margin-right: 8px;
+}
