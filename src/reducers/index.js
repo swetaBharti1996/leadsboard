@@ -4,6 +4,10 @@ import errorReducer from './errorReducer';
 import postReducer from './postReducer';
 import commentReducer from './commentReducer';
 import { DESTROY_SESSION } from '../actions/types'
+import { history } from '../routers/AppRouter'
+import {
+ pushPath
+} from 'redux-simple-router';
 
 const appReducer = combineReducers({
  auth: authReducer,
@@ -16,7 +20,7 @@ export const rootReducer = (state, action) => {
  // Clear all data in redux store to initial.
  if (action.type === DESTROY_SESSION) {
   localStorage.removeItem('fbstoken')
-  state = undefined
+  state = undefined;
  }
 
  return appReducer(state, action);

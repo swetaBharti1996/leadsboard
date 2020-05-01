@@ -7,13 +7,13 @@ import { tokenConfig } from './authActions'
 
 import { returnErrors } from './errorActions'
 
-export const loadComments = (postId) => (dispatch, getState) => {
+export const loadComments = (postUrl) => (dispatch, getState) => {
   dispatch({ type: COMMENT_LOADING });
 
-  const body = JSON.stringify({ postId })
+  const body = JSON.stringify({ postUrl })
 
   axios.post(
-    'https://app.leadsharvester.com/backend/website/scrapper/facebook/getComments',
+    `https://app.leadsharvester.com/backend/website/scrapper/facebook/getComments`,
     body,
     tokenConfig(getState)
   )

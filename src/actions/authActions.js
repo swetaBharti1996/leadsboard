@@ -9,16 +9,16 @@ import {
   DESTROY_SESSION
 } from './types'
 import { returnErrors, clearErrors } from './errorActions'
-import createHistory from 'history/createBrowserHistory';
-export const history = createHistory();
-
-
+import { history } from '../routers/AppRouter';
+import {
+  pushPath
+} from 'redux-simple-router';
 
 // Load user
 export const loadUser = () => (dispatch, getState) => {
   dispatch({ type: USER_LOADING });
 
-  axios.get('https://app.leadsharvester.com/backend/website/scrapper/auth/user/me', tokenConfig(getState))
+  axios.get(`https://app.leadsharvester.com/backend/website/scrapper/auth/user/me`, tokenConfig(getState))
     .then(res => {
       dispatch({
         type: USER_LOADED,
@@ -43,10 +43,11 @@ export const login = ({ email, password }) => dispatch => {
       "Content-type": "application/json"
     }
   }
+  dispatch({ type: USER_LOADING });
 
   const body = JSON.stringify({ email, password })
 
-  axios.post("https://app.leadsharvester.com/backend/website/scrapper/auth/login", body, config)
+  axios.post(`https://app.leadsharvester.com/backend/website/scrapper/auth/login`, body, config)
     .then(res => {
       // let token = res.headers['x-auth'];
       // console.log('Token', res)
@@ -57,6 +58,10 @@ export const login = ({ email, password }) => dispatch => {
 
       dispatch({
         type: LOGIN_SUCCESS,
+        payload: res.data
+      })
+      dispatch({
+        type: USER_LOADED,
         payload: res.data
       })
     })
@@ -72,12 +77,26 @@ export const login = ({ email, password }) => dispatch => {
 
 }
 
-export const logout = () => {
-  return dispatch => {
-    // Your code here...
-    history.push('/')
-    dispatch({ type: DESTROY_SESSION });
-  };
+export const logout = () => (dispatch, getState) => {
+
+  axios.delete(`https://app.leadsharvester.com/backend/website/scrapper/auth/logout`, tokenConfig(getState))
+    .then(res => {
+      // history.push('/')
+      dispatch({ type: DESTROY_SESSION });
+      dispatch({ type: LOGOUT_SUCCESS });
+    }).catch(err => {
+      if (err.response) {
+        dispatch(returnErrors(err.response.data.message, err.response.status, err.response.data.success))
+        dispatch({
+          type: AUTH_ERROR
+        })
+      }
+
+    })
+  // return dispatch => {
+  //   // Your code here...
+  //   history.push('/')
+  // }; 
 }
 
 export const tokenConfig = getState => {

@@ -82,8 +82,8 @@ const Post = (props) => {
     setEditingKey('');
   };
 
-  const handleLink = (postId) => {
-    props.history.push('comment', { postId });
+  const handleLink = (postUrl) => {
+    props.history.push('comment', { postUrl });
   }
 
 
@@ -111,15 +111,18 @@ const Post = (props) => {
       console.log('Validate Failed:', errInfo);
     }
   };
+  const getPosition = (string, subString, index) => {
+    return string.split(subString, index).join(subString).length;
+  }
 
   const columns = [
     {
-      title: 'Post ID',
-      dataIndex: 'postId',
+      title: 'Post URL',
+      dataIndex: 'postUrl',
       width: '25%',
       editable: true,
       render: (_, rec) => {
-        return (<a onClick={() => handleLink(rec.postId)}>{rec.postId}</a >)
+        return (<a onClick={() => handleLink(rec.postUrl)}>{rec.postUrl.slice(0, getPosition(rec.postUrl, '/', 4))}</a >)
       }
     },
     {

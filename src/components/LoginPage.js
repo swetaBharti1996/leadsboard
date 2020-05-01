@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
-import { Form, Input, Button, Checkbox, Row, Col, Alert, Modal, Radio } from 'antd';
+import { Form, Input, Button, Checkbox, Row, Col, Alert, Modal, Radio, Spin } from 'antd';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 
 import { login } from '../actions/authActions';
 import { clearErrors } from '../actions/errorActions';
+
+import { LoadingOutlined } from '@ant-design/icons';
+
+const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 
 const layout = {
   labelCol: {
@@ -88,20 +92,21 @@ class LoginPage extends React.Component {
     email: null,
     password: null,
     message: null,
-    visible: false
+    visible: false,
+    isLoading: false
   }
 
   static propTypes = {
     isAuthenticated: PropTypes.bool,
+    isLoading: PropTypes.bool,
     error: PropTypes.object.isRequired,
     login: PropTypes.func.isRequired,
     clearErrors: PropTypes.func.isRequired
   }
 
 
-
   componentDidUpdate(prevProps) {
-    const { error } = this.props;
+    const { error, isLoading } = this.props;
     if (error !== prevProps.error) {
       if (error.id === 'LOGIN_ERROR') {
         this.setState({ message: error.message })
@@ -136,24 +141,28 @@ class LoginPage extends React.Component {
   render() {
     return (
       <div className="wrapper">
+
         <Button
           type="primary"
           onClick={() => {
             this.setState({ visible: true });
+            this.setState({ isLoading: true });
           }}
         >
           Login via Email
       </Button>
-        <CollectionCreateForm
-          visible={this.state.visible}
-          onCreate={this.onCreate}
-          onCancel={() => {
-            this.props.clearErrors();
-            this.setState({ visible: false });
-          }}
-          success={this.success}
-          message={this.state.message}
-        />
+        <div>
+          <CollectionCreateForm
+            visible={this.state.visible}
+            onCreate={this.onCreate}
+            onCancel={() => {
+              this.props.clearErrors();
+              this.setState({ visible: false });
+            }}
+            success={this.success}
+            message={this.state.message}
+          />
+        </div>
       </div>
 
     );
@@ -164,7 +173,8 @@ class LoginPage extends React.Component {
 const mapStateToProps = (state) => {
   return {
     isAuthenticated: !!state.auth.token,
-    error: state.error
+    error: state.error,
+    isLoading: state.auth.isLoading
   }
 }
 

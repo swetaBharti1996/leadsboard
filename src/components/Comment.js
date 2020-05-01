@@ -1,21 +1,23 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Button } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Form, Button, Spin } from 'antd';
 import { loadComments } from '../actions/commentActions'
 import { clearErrors } from '../actions/errorActions';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import { DownloadOutlined } from '@ant-design/icons';
 import { CSVLink, CSVDownload } from "react-csv";
+import { LoadingOutlined } from '@ant-design/icons';
 
+const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 
 const Comment = (props) => {
   const { loadComments, comment } = props;
 
 
   useEffect(() => {
-    let postId = props.location.state && props.location.state.postId ? props.location.state.postId : null;
-    if (postId) {
-      loadComments(postId)
+    let postUrl = props.location.state && props.location.state.postUrl ? props.location.state.postUrl : null;
+    if (postUrl) {
+      loadComments(postUrl)
     }
   }, [loadComments]);
 
@@ -113,6 +115,9 @@ const Comment = (props) => {
       title: 'Profile URL',
       dataIndex: 'profileUrl',
       width: '25%',
+      render: (_, rec) => {
+        return (<p>{rec.profileUrl.slice(0, rec.profileUrl.indexOf('?'))}</p>)
+      }
     },
     {
       title: 'Comment',
@@ -189,20 +194,22 @@ const Comment = (props) => {
       </div>
 
       <Form form={form} component={false}>
-        <Table
-          components={{
-            body: {
-              cell: EditableCell,
-            },
-          }}
-          bordered
-          dataSource={comment.comments}
-          columns={mergedColumns}
-          rowClassName="editable-row"
-          pagination={{
-            onChange: cancel,
-          }}
-        />
+        <Spin spinning={comment.isLoading}>
+          <Table
+            components={{
+              body: {
+                cell: EditableCell,
+              },
+            }}
+            bordered
+            dataSource={comment.comments}
+            columns={mergedColumns}
+            rowClassName="editable-row"
+            pagination={{
+              onChange: cancel,
+            }}
+          />
+        </Spin>
       </Form>
     </div>
 
