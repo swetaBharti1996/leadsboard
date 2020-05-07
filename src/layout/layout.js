@@ -12,20 +12,21 @@ import {
 } from '@ant-design/icons';
 import _ from 'lodash';
 const { Header, Sider, Content } = Layout;
+const { SubMenu } = Menu;
 
 
 
 const MENU = [
-     { name: "Insights", url: "/insight", icon: AreaChartOutlined },
+     { name: "Insights", url: "/insight", icon: AreaChartOutlined, submenu: [] },
      {
-          name: "Posts",
+          name: "Facebook Group",
           icon: ProfileOutlined,
-          url: "/post"
+          submenu: [{ menu1: "Posts", url: "/group/post?type=group" }]
      },
      {
-          name: "Comments",
+          name: "Facebook Page",
           icon: ProfileOutlined,
-          url: "/comment"
+          submenu: [{ menu1: "Posts", url: "/page/post?type=page" }]
      }
 ];
 const LayoutCover = (props) => {
@@ -46,16 +47,38 @@ const LayoutCover = (props) => {
                     <div className="logo" />
                     <Menu theme="dark" mode="inline" defaultSelectedKeys={['1']}>
                          {_.map(MENU, (data, index) => {
-                              return (
-                                   <Menu.Item
-                                        key={index}
-                                   >
-                                        <Link to={data.url}>
-                                             {createIcon(data.icon)}
-                                             <span>{data.name}</span>
-                                        </Link>
-                                   </Menu.Item>
-                              );
+                              if (data.submenu.length) {
+                                   return (
+                                        <SubMenu
+                                             key={`sub${index + 1}`}
+                                             title={
+                                                  <span>
+                                                       {createIcon(data.icon)}
+                                                       <span>{data.name}</span>
+                                                  </span>
+                                             }
+                                        >
+                                             {_.map(data.submenu, (data1, i) => {
+                                                  return (
+                                                       <Menu.Item key={`${index}-${i}`}>
+                                                            <Link to={data1.url}>{data1.menu1}</Link>
+                                                       </Menu.Item>
+                                                  );
+                                             })}
+                                        </SubMenu>
+                                   );
+                              } else {
+                                   return (
+                                        <Menu.Item
+                                             key={index}
+                                        >
+                                             <Link to={data.url}>
+                                                  {createIcon(data.icon)}
+                                                  <span>{data.name}</span>
+                                             </Link>
+                                        </Menu.Item>
+                                   );
+                              }
                          })}
 
                     </Menu>

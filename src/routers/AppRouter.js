@@ -24,8 +24,8 @@ const AppRouter = () => {
      <PublicRoute exact={true} path="/" component={LoginPage} />
      <PrivateRoute path="/dashboard" component={Dashboard} />
      <PrivateRoute path="/insight" component={Insight} />
-     <PrivateRoute path="/post" component={Post} />
-     <PrivateRoute path="/comment" component={Comment} />
+     <PrivateRoute path={["/page/post", "/group/post"]} component={Post} />
+     <PrivateRoute path={["/page/comment", "/group/comment"]} component={Comment} />
      <Route component={NotFoundPage} />
     </Switch>
    </div>

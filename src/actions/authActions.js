@@ -18,7 +18,7 @@ import {
 export const loadUser = () => (dispatch, getState) => {
   dispatch({ type: USER_LOADING });
 
-  axios.get(`https://app.leadsharvester.com/backend/website/scrapper/auth/user/me`, tokenConfig(getState))
+  axios.get(`http://localhost:8888/website/scrapper/auth/user/me`, tokenConfig(getState))
     .then(res => {
       dispatch({
         type: USER_LOADED,
@@ -47,7 +47,7 @@ export const login = ({ email, password }) => dispatch => {
 
   const body = JSON.stringify({ email, password })
 
-  axios.post(`https://app.leadsharvester.com/backend/website/scrapper/auth/login`, body, config)
+  axios.post(`http://localhost:8888/website/scrapper/auth/login`, body, config)
     .then(res => {
       // let token = res.headers['x-auth'];
       // console.log('Token', res)
@@ -79,7 +79,7 @@ export const login = ({ email, password }) => dispatch => {
 
 export const logout = () => (dispatch, getState) => {
 
-  axios.delete(`https://app.leadsharvester.com/backend/website/scrapper/auth/logout`, tokenConfig(getState))
+  axios.delete(`http://localhost:8888/website/scrapper/auth/logout`, tokenConfig(getState))
     .then(res => {
       // history.push('/')
       dispatch({ type: DESTROY_SESSION });

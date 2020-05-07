@@ -3,10 +3,18 @@ import { Table, Input, InputNumber, Popconfirm, Form } from 'antd';
 import { loadPosts } from '../actions/postActions'
 import { clearErrors } from '../actions/errorActions';
 import { connect } from 'react-redux';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import { CSVLink, CSVDownload } from "react-csv";
 
+function useQuery() {
+  return new URLSearchParams(useLocation().search);
+}
+
 const Post = (props) => {
+
+  let query = useQuery();
+  let queryState = query.get('type');
+
 
   const { loadPosts, post, loadCSV, comment } = props;
   const [csvDat, setCSV] = useState([])
@@ -15,15 +23,28 @@ const Post = (props) => {
   const mounted = useRef();
   let inputRef = React.createRef('csv');
 
+
+  function usePrevious(value) {
+    const ref = useRef();
+    useEffect(() => {
+      ref.current = value;
+    });
+    return ref.current;
+  }
+
+  const prevQuery = usePrevious(queryState);
   useEffect(() => {
-    if (!mounted.current) {
-      mounted.current = true;
-      loadPosts()
-    } else {
+    // if (!mounted.current) {
+    //   mounted.current = true;
+    //   loadPosts(query.get('type'))
+    // } else {
+    // }
+    if (prevQuery !== queryState) {
+      // console.log(`now: ${queryState}. prev: ${prevQuery}`)
+      loadPosts(query.get('type'))
     }
-  }, [loadPosts, loadCSV, comment, csvDat]);
 
-
+  }, [loadPosts, loadCSV, comment, csvDat, queryState]);
 
 
   const EditableCell = ({

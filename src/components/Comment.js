@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Table, Input, InputNumber, Popconfirm, Form, Button, Spin } from 'antd';
+import { Table, Input, InputNumber, Popconfirm, Form, Button, Spin, Modal, Select, Divider } from 'antd';
 import { loadComments } from '../actions/commentActions'
 import { clearErrors } from '../actions/errorActions';
 import { connect } from 'react-redux';
@@ -7,16 +7,30 @@ import { useHistory } from 'react-router-dom';
 import { DownloadOutlined } from '@ant-design/icons';
 import { CSVLink, CSVDownload } from "react-csv";
 import { LoadingOutlined } from '@ant-design/icons';
+import 'braft-editor/dist/index.css'
+import BraftEditor from 'braft-editor'
+import Email from './Email';
 
 const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 
 const Comment = (props) => {
+  let tempeditorState = BraftEditor.createEditorState('<p>Hello <b>World!</b></p>')
+
   const { loadComments, comment } = props;
+  const [modal1Visible, setVisible] = useState(false);
+  const [editorState, setEditorState] = useState(tempeditorState)
+  const [data, setData] = useState(comment.comments);
+  const [editingKey, setEditingKey] = useState('');
+  const [outputHTML, setOutputHTML] = useState('<p></p>')
+  const [emails, setEmails] = useState([])
+  const [didMount, setDidMount] = useState(false)
+  const [postUrlS, setPostUrl] = useState()
 
 
   useEffect(() => {
     let postUrl = props.location.state && props.location.state.postUrl ? props.location.state.postUrl : null;
     if (postUrl) {
+      setPostUrl(postUrl)
       loadComments(postUrl)
     }
   }, [loadComments]);
@@ -59,8 +73,7 @@ const Comment = (props) => {
   };
 
   const [form] = Form.useForm();
-  const [data, setData] = useState(comment.comments);
-  const [editingKey, setEditingKey] = useState('');
+
 
 
   const isEditing = record => record.key === editingKey;
@@ -78,6 +91,20 @@ const Comment = (props) => {
   const cancel = () => {
     setEditingKey('');
   };
+
+  const extractEmails = (text) => {
+    text = text.toLowerCase()
+    let temp = { value: null }
+    let formattedEmail = text.match(/([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9._-]+)/gi)
+    temp['value'] = formattedEmail;
+
+    return formattedEmail
+  }
+
+  const handleEditorChange = (editorState) => {
+    setEditorState(editorState);
+    setOutputHTML(editorState.toHTML())
+  }
 
 
   const save = async key => {
@@ -101,6 +128,9 @@ const Comment = (props) => {
     }
   };
 
+  const setModal1Visible = (modalVisible) => {
+    setVisible(modalVisible)
+  }
   const columns = [
     {
       title: 'Username',
@@ -123,6 +153,14 @@ const Comment = (props) => {
       title: 'Comment',
       dataIndex: 'commentText',
       width: '25%',
+    },
+    {
+      title: 'Email(s)',
+      dataIndex: 'commentText',
+      width: '25%',
+      render: (_, rec) => {
+        return (<p>{extractEmails(rec.commentText)}</p>)
+      }
     },
 
     {
@@ -180,6 +218,7 @@ const Comment = (props) => {
           <Button >Sort age</Button>
           <Button >Clear filters</Button>
           <Button>Clear filters and sorters</Button>
+          <Button type="primary" ghost onClick={() => setModal1Visible(true)}>Send email</Button>
         </div>
         <div>
           <CSVLink
@@ -211,6 +250,8 @@ const Comment = (props) => {
           />
         </Spin>
       </Form>
+
+      <Email setModal1Visible={setModal1Visible} modal1Visible={modal1Visible} postUrl={postUrlS} />
     </div>
 
   )

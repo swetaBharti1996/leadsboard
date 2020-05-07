@@ -1,9 +1,11 @@
-import { COMMENT_LOADED, COMMENT_LOADING, CSV_LOADED, CSV_LOADING } from '../actions/types'
+import { COMMENT_LOADED, COMMENT_LOADING, SENDING_EMAIL, EMAIL_SENT, COLLECT_EMAILS } from '../actions/types'
 
 const initialState = {
   isLoading: false,
   comments: [],
-  csvData: []
+  csvData: [],
+  emailCollection: [],
+  isEmailSending: false
 }
 
 
@@ -19,6 +21,21 @@ export default function (state = initialState, action) {
         ...state,
         isLoading: false,
         comments: [...action.payload]
+      }
+    case COLLECT_EMAILS:
+      return {
+        ...state,
+        emailCollection: [...action.email]
+      }
+    case SENDING_EMAIL:
+      return {
+        ...state,
+        isEmailSending: true
+      }
+    case EMAIL_SENT:
+      return {
+        ...state,
+        isEmailSending: false
       }
     default:
       return state

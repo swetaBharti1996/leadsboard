@@ -9,6 +9,7 @@
     "@testing-library/user-event": "^7.1.2",
     "antd": "^4.1.4",
     "axios": "^0.19.2",
+    "braft-editor": "^2.3.9",
     "history": "^4.7.2",
     "lodash": "^4.17.15",
     "prop-types": "^15.7.2",

@@ -15,7 +15,7 @@ export const PublicRoute = ({
             <Component {...props} />
           </div>
         ) : (
-            <Redirect to="/post" />
+            <Redirect to="/page/post?type=page" />
           )
       )
     }} />
