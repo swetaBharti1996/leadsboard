@@ -16,7 +16,7 @@ export const loadComments = (postUrl) => (dispatch, getState) => {
   const body = JSON.stringify({ postUrl })
 
   axios.post(
-    `http://localhost:8888/website/scrapper/facebook/getComments`,
+    `https://app.leadsharvester.com/backend/website/scrapper/facebook/getComments`,
     body,
     tokenConfig(getState)
   )
@@ -50,7 +50,7 @@ export const bulkEmailSend = (template) => (dispatch, getState) => {
   });
   dispatch({ type: SENDING_EMAIL });
   axios.post(
-    `http://localhost:8888/website/scrapper/facebook/sendBulkEmails`,
+    `https://app.leadsharvester.com/backend/website/scrapper/facebook/sendBulkEmails`,
     body,
     tokenConfig(getState)
   )
@@ -72,7 +72,7 @@ export const bulkEmailSend = (template) => (dispatch, getState) => {
 //   const body = JSON.stringify({ postId })
 
 //   axios.post(
-//     'http://localhost:8888/website/scrapper/facebook/getComments',
+//     'https://app.leadsharvester.com/backend/website/scrapper/facebook/getComments',
 //     body,
 //     tokenConfig(getState)
 //   )
