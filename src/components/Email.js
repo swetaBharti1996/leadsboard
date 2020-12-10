@@ -10,6 +10,7 @@ import BraftEditor from 'braft-editor'
 const Email = (props) => {
  let tempeditorState = BraftEditor.createEditorState('<p>Hello <b>World!</b></p>')
  const { post, setModal1Visible, modal1Visible, loadEmails, postUrl, collectEmails, emailCollection, bulkEmailSend, isEmailSending } = props;
+ 
 
 
 
